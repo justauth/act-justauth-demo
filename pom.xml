@@ -30,5 +30,4 @@
       <version>${justauth.version}</version>
     </dependency>
   </dependencies>
-
 </project>
