@@ -20,7 +20,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <!--JustAuth版本-->
-    <justauth.version>1.9.1</justauth.version>
+    <justauth.version>1.9.2-SNAPSHOT</justauth.version>
   </properties>
 
   <dependencies>
@@ -30,4 +30,25 @@
       <version>${justauth.version}</version>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <!--阿里云私服-->
+    <repository>
+      <id>aliyun</id>
+      <name>aliyun</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </repository>
+    <!--xkcoding 私服-->
+    <repository>
+      <id>xkcoding-nexus</id>
+      <name>xkcoding nexus</name>
+      <url>https://nexus.xkcoding.com/repository/maven-public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
