@@ -2,6 +2,7 @@ package com.xkcoding.demo.action;
 
 import act.Act;
 import act.conf.AppConfig;
+import act.controller.annotation.UrlContext;
 import cn.hutool.core.lang.Dict;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.config.AuthSource;
@@ -25,13 +26,14 @@ import org.osgl.mvc.annotation.ResponseContentType;
  * @author yangkai.shen
  * @date Created in 2019-07-22 18:30
  */
+@UrlContext("/oauth")
 @SuppressWarnings("unused")
 public class OAuthAction {
 
     /**
      * 登录类型
      */
-    @GetAction("/oauth")
+    @GetAction
     @ResponseContentType(H.MediaType.JSON)
     public Dict loginType(H.Response response) {
         return Dict.create()
@@ -46,7 +48,7 @@ public class OAuthAction {
      * @param source   来源 {@link AuthSource}
      * @param response response
      */
-    @GetAction("/oauth/login/{source}")
+    @GetAction("login/{source}")
     public void renderAuth(AuthSource source, H.Response response) {
         AuthRequest authRequest = getAuthRequest(source);
         response.sendRedirect(authRequest.authorize());
@@ -59,7 +61,7 @@ public class OAuthAction {
      * @param callback 携带返回的信息 {@link AuthCallback}
      * @return 登录成功后的信息
      */
-    @GetAction("/oauth/{source}/callback")
+    @GetAction("{source}/callback")
     @ResponseContentType(H.MediaType.JSON)
     public AuthResponse login(AuthSource source, AuthCallback callback) {
         AuthRequest authRequest = getAuthRequest(source);
