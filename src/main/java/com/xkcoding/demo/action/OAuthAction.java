@@ -12,7 +12,7 @@ import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthMiRequest;
 import me.zhyd.oauth.request.AuthQqRequest;
 import me.zhyd.oauth.request.AuthRequest;
-import me.zhyd.oauth.utils.AuthState;
+import me.zhyd.oauth.utils.AuthStateUtils;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
@@ -36,10 +36,7 @@ public class OAuthAction {
     @GetAction
     @ResponseContentType(H.MediaType.JSON)
     public Dict loginType(H.Response response) {
-        return Dict.create()
-                .set("QQ登录", "http://oauth.xkcoding.com/demo/oauth/login/qq")
-                .set("GitHub登录", "http://oauth.xkcoding.com/demo/oauth/login/github")
-                .set("小米登录", "http://oauth.xkcoding.com/demo/oauth/login/mi");
+        return Dict.create().set("QQ登录", "http://oauth.xkcoding.com/demo/oauth/login/qq").set("GitHub登录", "http://oauth.xkcoding.com/demo/oauth/login/github").set("小米登录", "http://oauth.xkcoding.com/demo/oauth/login/mi");
     }
 
     /**
@@ -51,7 +48,7 @@ public class OAuthAction {
     @GetAction("login/{source}")
     public void renderAuth(AuthSource source, H.Response response) {
         AuthRequest authRequest = getAuthRequest(source);
-        response.sendRedirect(authRequest.authorize());
+        response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
     }
 
     /**
@@ -66,8 +63,6 @@ public class OAuthAction {
     public AuthResponse login(AuthSource source, AuthCallback callback) {
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
-        // 移除校验通过的state
-        AuthState.delete(source);
         return response;
     }
 
@@ -97,11 +92,6 @@ public class OAuthAction {
         String clientId = $.convert(appConfig.get("oauth." + type + ".client-id")).toString();
         String clientSecret = $.convert(appConfig.get("oauth." + type + ".client-secret")).toString();
         String redirectUri = $.convert(appConfig.get("oauth." + type + ".redirect-uri")).toString();
-        return AuthConfig.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .redirectUri(redirectUri)
-                .state(AuthState.create(source))
-                .build();
+        return AuthConfig.builder().clientId(clientId).clientSecret(clientSecret).redirectUri(redirectUri).build();
     }
 }
